@@ -37,12 +37,6 @@ Constraints:
 
 class LRUCache:
     
-    def __init__(self, capacity: int):
-        self.capacity = capacity
-        self.dlist = self.Dlist()
-        self.keys = dict()
-
-
     class Dnode:
         def __init__(self, key: int, val: int):
             self.key = key
@@ -79,9 +73,7 @@ class LRUCache:
             self.size -= 1
             return key
         
-        def update(self, node):
-            if node.prev == self.head:
-                return
+        def update(self, node, newVal: int = None):
             # pull it out
             nPrev, nNext = node.prev, node.next
             nPrev.next = nNext
@@ -92,20 +84,30 @@ class LRUCache:
             hNext.prev = node
             node.prev = self.head
             node.next = hNext
+            if newVal:
+                node.val = newVal
         
             
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.dlist = self.Dlist()
+        self.keys = dict()
+
+
     def get(self, key: int) -> int:
         if key in self.keys:
             node = self.keys[key]
+            self.dlist.update(node)
             return node.val
         return -1
 
     def put(self, key: int, value: int) -> None:
         if key in self.keys:
-            self.dlist.update(self.keys[key])
+            self.dlist.update(self.keys[key], value)
         else:
             if self.dlist.size >= self.capacity:
                 rmKey = self.dlist.pop()
+                self.keys[rmKey] = None
                 self.keys.pop(rmKey)
             node = self.dlist.insert(key, value)
             self.keys[key] = node
@@ -123,19 +125,18 @@ class LRUCache:
         print(ls)
 
 
-s = LRUCache(3)
-s.put(1,1)
+s = LRUCache(2)
+s.put(2,1)
 s.printCache()
 s.put(2,2)
 s.printCache()
-s.put(3,3)
+print('---get: ',s.get(2))
 s.printCache()
 s.put(1,1)
 s.printCache()
-s.put(6,6)
+s.put(4,1)
 s.printCache()
-s.put(2,2)
-s.printCache()
+print('---get: ',s.get(2))
 
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
