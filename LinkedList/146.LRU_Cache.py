@@ -37,9 +37,15 @@ Constraints:
 
 class LRUCache:
     
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.dlist = self.Dlist()
+        self.keys = dict()
+
+
     class Dnode:
         def __init__(self, key: int, val: int):
-            self.key = key,
+            self.key = key
             self.val = val
             self.prev = None
             self.next = None
@@ -47,15 +53,15 @@ class LRUCache:
 
     class Dlist:
         def __init__(self):
-            self.head = Dnode(0, 0)
-            self.tail = Dnode(0, 0)
+            self.head = LRUCache.Dnode(0, 0)
+            self.tail = LRUCache.Dnode(0, 0)
             self.size = 0
             self.head.next = self.tail
             self.tail.prev = self.head
             
-        def insert(self, key: int, val: int) -> Dnode:
+        def insert(self, key: int, val: int) -> LRUCache.Dnode:
             xHead = self.head.next
-            newNode = Dnode(key, val)
+            newNode = LRUCache.Dnode(key, val)
             self.head.next = newNode
             newNode.prev = self.head
             xHead.prev = newNode
@@ -74,7 +80,7 @@ class LRUCache:
             return key
         
         def update(self, node):
-            if node.prev == head:
+            if node.prev == self.head:
                 return
             # pull it out
             nPrev, nNext = node.prev, node.next
@@ -88,11 +94,6 @@ class LRUCache:
             node.next = hNext
         
             
-    def __init__(self, capacity: int):
-        self.capacity = capacity
-        self.dlist = Dlist()
-        self.keys = dict()
-
     def get(self, key: int) -> int:
         if key in self.keys:
             node = self.keys[key]
@@ -105,10 +106,36 @@ class LRUCache:
         else:
             if self.dlist.size >= self.capacity:
                 rmKey = self.dlist.pop()
-                self.keys.remove(rmKey)
+                self.keys.pop(rmKey)
             node = self.dlist.insert(key, value)
             self.keys[key] = node
 
+
+###### DEBUG ##############################################################
+
+    def printCache(self):
+        cur = self.dlist.head
+        ls = list()
+        while cur:
+            ls.append('%i -> ' % cur.val)
+            cur = cur.next
+        print(self.keys.keys())
+        print(ls)
+
+
+s = LRUCache(3)
+s.put(1,1)
+s.printCache()
+s.put(2,2)
+s.printCache()
+s.put(3,3)
+s.printCache()
+s.put(1,1)
+s.printCache()
+s.put(6,6)
+s.printCache()
+s.put(2,2)
+s.printCache()
 
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
