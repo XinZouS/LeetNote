@@ -59,7 +59,7 @@ class LRUCache:
             self.head.next = self.tail
             self.tail.prev = self.head
             
-        def insert(self, key: int, val: int) -> LRUCache.Dnode:
+        def insert(self, key: int, val: int): # -> LRUCache.Dnode:
             xHead = self.head.next
             newNode = LRUCache.Dnode(key, val)
             self.head.next = newNode
