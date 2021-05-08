@@ -77,40 +77,33 @@ class Solution_2:
         
     #========================================================================
         
-    def connectLand(self, a: int, b: int):
-        if a == b or self.uf.isConnected(a, b):
-            return
-        self.uf.union(a, b)
-        
-        
     def numIslands(self, grid: List[List[str]]) -> int:
         if not grid or len(grid) == 0 or len(grid[0]) == 0:
             return 0
-        self.grid = grid
-        self.lenY, self.lenX = len(grid), len(grid[0])
-        lands = self.lenY * self.lenX
         water = 0
-        self.uf = self.UnionFind(lands)
-        self.dr = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        self.lenY, self.lenX = len(grid), len(grid[0])
+        self.gridSize = self.lenY * self.lenX
+        self.directions = [(1,0), (-1,0), (0,1), (0,-1)]
+        self.uf = self.UnionFind(self.gridSize)
+        self.grid = grid
         for y in range(self.lenY):
             for x in range(self.lenX):
                 if grid[y][x] == '1':
                     land = y * self.lenX + x
-                    for d in self.dr:
+                    for d in self.directions:
                         self.dfs(y + d[0], x + d[1], land)
                 else:
                     water += 1
-        return self.uf.count - water # !!!
-    
+        return self.uf.count - water
         
     def dfs(self, y: int, x: int, land: int):
-        if x < 0 or y < 0 or x >= self.lenX or y >= self.lenY:
+        if y < 0 or x < 0 or y >= self.lenY or x >= self.lenX:
             return
-        if self.grid[y][x] != '1':
+        cur = y * self.lenX + x
+        if cur == land or self.grid[y][x] != '1' or self.uf.isConnected(cur, land):
             return
-        i = y * self.lenX + x
-        if self.uf.isConnected(i, land): # !!!
-            return
-        self.connectLand(i, land)
-        for d in self.dr:
+        self.uf.union(cur, land)
+        for d in self.directions:
             self.dfs(y + d[0], x + d[1], land)
+        
+        
