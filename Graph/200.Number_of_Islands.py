@@ -9,7 +9,7 @@ An island is surrounded by water and is formed by connecting adjacent lands ho
 
 #python key: BFS flood island  140 ms, faster than 69.57%
 class Solution:
-    def numIslands(self, grid: List[List[str]]) -> int:
+    def numIslands(self, grid: list[list[str]]) -> int:
         self.res = 0
         if len(grid) == 0 or len(grid[0]) == 0:
             return self.res
@@ -20,7 +20,7 @@ class Solution:
                     self.flood(y, x, grid)
         return self.res
     
-    def flood(self, y: int, x: int, grid: List[List[str]]):
+    def flood(self, y: int, x: int, grid: list[list[str]]):
         if y < 0 or x < 0 or y >= len(grid) or x >= len(grid[y]):
             return
         if grid[y][x] != '1':
@@ -35,10 +35,10 @@ class Solution:
 ###########################################################################
 
 
-class Solution_2:
+class Solution_uf:
     
     # not good: 340 ms, faster than 5.34%
-    
+
     #========================================================================
     class UnionFind:
         # O(n)
@@ -77,7 +77,7 @@ class Solution_2:
         
     #========================================================================
         
-    def numIslands(self, grid: List[List[str]]) -> int:
+    def numIslands(self, grid: list[list[str]]) -> int:
         if not grid or len(grid) == 0 or len(grid[0]) == 0:
             return 0
         water = 0
@@ -107,3 +107,21 @@ class Solution_2:
             self.dfs(y + d[0], x + d[1], land)
         
         
+grid1 = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+grid2 = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+gridSize = 20
+s = Solution_uf()
+n1 = s.numIslands(grid1)
+n2 = s.numIslands(grid2)
+print(n1, n2)
+
